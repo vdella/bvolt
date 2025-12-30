@@ -7,16 +7,79 @@ The BVOLT platform is organized around a strict separation between
 hardware access, state persistence, and remote API exposure.
 
 ```mermaid
-flowchart TB
-INV["Physical Inverter (Modbus/Serial)"]
-MODBUS["Modbus/Serial"]
-WORKER["Polling Worker (hardware-facing)"]
+flowchart LR
+%% =====================
+%% Physical System
+%% =====================
+    BATTERY["5-Cell Lithium Battery Bank"]
+    BMS["BMS Sensors"]
 
-INV --> MODBUS --> WORKER
-WORKER -->|writes| DB["InfluxDB/State Cache"]
-DB -->|reads| WORKER
-DB -->|reads| API["BVOLT REST API (FastAPI)"]
-API -->|writes| DB
+    BATTERY --> BMS
+
+%% =====================
+%% Hardware-facing Layer
+%% =====================
+    WORKER["Polling Worker (hardware-facing)"]
+    BMS -->|Modbus/Serial| WORKER
+
+%% =====================
+%% State Persistence
+%% =====================
+    DB["InfluxDB/State Cache"]
+
+    WORKER -->|writes| DB
+    DB -->|reads| WORKER
+
+%% =====================
+%% Estimation Layer
+%% =====================
+    MHE["Model-Based SOC Estimator"]
+    TFT["Data-Driven SOC Estimator"]
+
+    DB --> MHE
+    DB --> TFT
+
+%% =====================
+%% Benchmarking
+%% =====================
+    COMPARE["Benchmarking and Comparison Metrics"]
+
+    MHE --> COMPARE
+    TFT --> COMPARE
+
+%% =====================
+%% Digital Twin
+%% =====================
+    TWIN["Digital Twin Environment (State twinning and model parameter adjustment)"]
+
+COMPARE --> TWIN
+
+%% =====================
+%% Visualization
+%% =====================
+DASH["Grafana Dashboard SOC Visualization"]
+
+TWIN --> DASH
+
+%% =====================
+%% API Layer (BVOLT)
+%% =====================
+API["BVOLT REST API (FastAPI)"]
+
+DB -->|reads| API
+API -->|writes commands| DB
+
+%% =====================
+%% Remote Client
+%% =====================
 CLIENT["Remote Client"]
+
 CLIENT <-->|HTTP| API
+
+%% =====================
+%% Feedback Loops (Optional)
+%% =====================
+TWIN -.-> MHE
+TWIN -.-> TFT
+
 ```
