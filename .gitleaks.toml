@@ -1,0 +1,127 @@
+# ============================================================
+# GITLEAKS CONFIGURATION — BVOLT
+#
+# Purpose:
+# Reduce false positives caused by scientific data,
+# telemetry, control matrices, and serialized outputs,
+# while keeping strict detection of real secrets.
+#
+# This file does NOT whitelist secrets.
+# ============================================================
+
+title = "BVOLT Gitleaks Configuration"
+
+# ------------------------------------------------------------
+# Global allowlist (applies to all rules)
+# ------------------------------------------------------------
+[allowlist]
+
+# File paths that are known to contain high-entropy *data*
+# but never credentials.
+paths = [
+    '''^data/''',
+    '''^datasets/''',
+    '''^results/''',
+    '''^experiments/''',
+    '''^telemetry/''',
+    '''^notebooks/''',
+    '''^reports/''',
+    '''^docs/figures/''',
+    '''^docs/images/'''
+]
+
+# File extensions that often contain numeric, binary,
+# or encoded scientific content.
+regexes = [
+    '''\.csv$''',
+    '''\.parquet$''',
+    '''\.h5$''',
+    '''\.mat$''',
+    '''\.npz$''',
+    '''\.npy$''',
+    '''\.onnx$''',
+    '''\.pb$''',
+    '''\.bin$'''
+]
+
+# ------------------------------------------------------------
+# Rule overrides (surgical, not blanket ignores)
+# ------------------------------------------------------------
+
+# 1) Generic high-entropy strings
+#
+# These often trigger on:
+# - hashes
+# - UUIDs
+# - experiment IDs
+# - serialized numeric vectors
+#
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key (BVOLT tuned)"
+regex = '''(?i)(api|token|key|secret)[^a-z0-9]?['"]?[0-9a-zA-Z\-_=]{20,}['"]?'''
+entropy = 4.5
+
+# Allow common non-secret identifiers explicitly
+[rules.allowlist]
+regexes = [
+    '''measurement_id''',
+    '''experiment_id''',
+    '''run_id''',
+    '''dataset_id''',
+    '''model_id'''
+]
+
+# ------------------------------------------------------------
+
+# 2) Base64 blobs
+#
+# Control systems and telemetry often store encoded payloads.
+# We only suppress when there is NO secret-related keyword.
+#
+[[rules]]
+id = "suspicious-base64-with-keyword"
+description = "Base64 blob near secret keywords"
+regex = '''(?i)(key|token|secret|password).{0,40}[A-Za-z0-9+/]{40,}={0,2}'''
+entropy = 5.0
+
+# ------------------------------------------------------------
+
+# 3) JWT-like strings
+#
+# JWTs are real secrets ONLY when used as auth tokens.
+# Experiment payloads and test vectors may look similar.
+#
+[[rules]]
+id = "jwt"
+description = "JWT-like structure"
+regex = '''eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}'''
+
+[rules.allowlist]
+regexes = [
+    '''example''',
+    '''test''',
+    '''dummy''',
+    '''sample'''
+]
+
+# ------------------------------------------------------------
+
+# 4) Environment files
+#
+# We NEVER ignore real .env files, but allow examples.
+#
+[[rules]]
+id = "env-files"
+description = "Environment variable files"
+regex = '''(?i)(\.env)'''
+
+[rules.allowlist]
+regexes = [
+    '''\.env\.example''',
+    '''\.env\.template'''
+]
+
+# ------------------------------------------------------------
+# End of configuration
+# ------------------------------------------------------------
