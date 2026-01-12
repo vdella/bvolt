@@ -36,7 +36,8 @@ stable over time, refers to a single physical or logical asset, and
 does not change with measurement methods. But what is an `asset`?
 
 > Asset. Any physical or logical energy system component whose state
-> is meaningful over time.
+> is meaningful over time. All assets may have state conceptually,
+> albeit only some of them have telemetry-backed states.
 
 They have domain state, can be observed and can be reasoned about by EMS logic.
 If something has no evolving state, it is not an asset.
