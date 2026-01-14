@@ -17,3 +17,4 @@ def operating_mode():
     """
     Microgrid operating mode routing.
     """
+    raise NotImplementedError
