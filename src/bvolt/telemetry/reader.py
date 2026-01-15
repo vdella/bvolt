@@ -10,14 +10,14 @@ class TelemetryReader(ABC):
     """
 
     @abstractmethod
-    def read_latest_state(self, asset_id: str) -> State:
+    def latest_state(self, asset_id: str) -> State:
         """
         Return the most recent recorded State for the given asset.
         """
         raise NotImplementedError
 
     @abstractmethod
-    def read_timeseries(
+    def timeseries(
             self,
             asset_id: str,
             start: datetime,
@@ -27,4 +27,3 @@ class TelemetryReader(ABC):
         Return an ordered sequence of State snapshots for a given
         asset over a specified time range.
         """
-        raise NotImplementedError

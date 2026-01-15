@@ -9,7 +9,7 @@ class TelemetryWriter(ABC):
     """
 
     @abstractmethod
-    def write_state(
+    def record_state(
             self,
             asset_id: str,
             state: State,
