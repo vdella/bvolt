@@ -18,13 +18,12 @@ def system_snapshot(
 
 @router.get("/timeseries")
 def microgrid_timeseries(
-        start: datetime,
-        end: datetime,
+        start: str,
+        end: str,
         microgrid_service: MicrogridService = Depends(get_microgrid_service),
 ):
-    """
-    Return a derived microgrid timeseries over a given time range.
-    """
+    start = datetime.fromisoformat(start)
+    end = datetime.fromisoformat(end)
     return microgrid_service.timeseries(start=start, end=end)
 
 
