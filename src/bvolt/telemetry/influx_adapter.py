@@ -8,7 +8,7 @@ from bvolt.infrastructure.config import *
 
 from influxdb_client import InfluxDBClient
 
-class InfluxAdapter(TelemetryReader):
+class InfluxTelemetryReader(TelemetryReader):
 
     _client = InfluxDBClient(
         url=config.influx_url,
