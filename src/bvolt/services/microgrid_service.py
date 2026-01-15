@@ -61,7 +61,7 @@ class MicrogridService:
         """
         raise NotImplementedError
 
-    def operating_mode(self) -> None:
+    def operating_mode(self):
         """
         Infer microgrid operating mode from observing all physical and
         logical assets operations.

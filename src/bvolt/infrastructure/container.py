@@ -26,8 +26,8 @@ def build_battery_services(battery_id: str) -> list[BatteryService]:
     ]
 
 
-def build_microgrid_service() -> MicrogridService:
-    batteries = build_battery_services()
+def build_microgrid_service(asset_id) -> MicrogridService:
+    batteries = build_battery_services(asset_id)
     telemetry = build_telemetry_service()
 
     return MicrogridService(

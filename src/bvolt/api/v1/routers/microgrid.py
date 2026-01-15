@@ -1,20 +1,36 @@
-# from bvolt.api.v1.dependencies import microgrid_service
+from fastapi import APIRouter, Depends
+from datetime import datetime
+
+from bvolt.api.v1.dependencies import get_microgrid_service
+from bvolt.services.microgrid_service import MicrogridService
+
+router = APIRouter(
+    prefix="/microgrid",
+    tags=["microgrid"],
+)
+
+@router.get("/snapshot")
+def system_snapshot(
+        microgrid_service: MicrogridService = Depends(get_microgrid_service),
+):
+    return microgrid_service.system_snapshot()
 
 
-def snapshot():
+@router.get("/timeseries")
+def microgrid_timeseries(
+        start: datetime,
+        end: datetime,
+        microgrid_service: MicrogridService = Depends(get_microgrid_service),
+):
     """
-    Microgrid system snapshot routing.
+    Return a derived microgrid timeseries over a given time range.
     """
-    raise NotImplementedError
+    return microgrid_service.timeseries(start=start, end=end)
 
-def timeseries():
-    """
-    Microgrid system timeseries routing.
-    """
-    raise NotImplementedError
 
-def operating_mode():
-    """
-    Microgrid operating mode routing.
-    """
-    raise NotImplementedError
+@router.get("/operating-mode")
+def operating_mode(
+        microgrid_service: MicrogridService = Depends(get_microgrid_service),
+):
+    mode = microgrid_service.operating_mode()
+    return {"operating_mode": mode}

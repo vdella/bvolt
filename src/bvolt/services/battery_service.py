@@ -27,7 +27,7 @@ class BatteryService:
         telemetry:
             TelemetryService for reading and writing battery-related data.
         """
-        self._battery = battery
+        self.battery = battery
         self._telemetry = telemetry
 
     def latest_state(self) -> State:

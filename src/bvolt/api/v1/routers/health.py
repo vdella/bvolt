@@ -1,5 +1,11 @@
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/health")
 def health():
     """
     Health check endpoint.
     """
-    raise NotImplementedError
+    return {"status": "ok"}
