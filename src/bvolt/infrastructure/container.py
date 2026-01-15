@@ -3,11 +3,11 @@ from bvolt.services.battery_service import BatteryService
 from bvolt.services.microgrid_service import MicrogridService
 
 
-def build_telemetry_service() -> TelemetryService:
+def build_telemetry_service(telemetry_reader, telemetry_writer) -> TelemetryService:
     """
     Construct the TelemetryService with the appropriate reader/writer.
     """
-    raise NotImplementedError
+    return TelemetryService(telemetry_reader, telemetry_writer)
 
 
 def build_battery_services() -> list[BatteryService]:

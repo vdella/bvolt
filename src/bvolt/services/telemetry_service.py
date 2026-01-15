@@ -41,7 +41,7 @@ class TelemetryService:
         This method does not guarantee real-time data. It returns the
         last known telemetry snapshot.
         """
-        raise NotImplementedError
+        return self._reader.latest_state(asset_id)
 
     def timeseries(
             self,
@@ -53,7 +53,7 @@ class TelemetryService:
         Retrieve an ordered sequence of historical state snapshots for
         a given asset over a specified time range.
         """
-        raise NotImplementedError
+        return self._reader.timeseries(asset_id, start, end)
 
     def record_state(
             self,

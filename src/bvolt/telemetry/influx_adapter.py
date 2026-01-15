@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Iterable
 
+from bvolt.domain.state import State
 from bvolt.infrastructure import config
 from bvolt.telemetry.reader import TelemetryReader
 from bvolt.telemetry.writer import TelemetryWriter
@@ -10,16 +11,14 @@ from influxdb_client import InfluxDBClient
 
 class InfluxTelemetryReader(TelemetryReader):
 
-    _client = InfluxDBClient(
-        url=config.influx_url,
-        token=config.influx_token,
-        org=config.influx_org
-    )
+    def __init__(self) -> None:
+        self._client = InfluxDBClient(
+            url=config.influx_url,
+            token=config.influx_token,
+            org=config.influx_org
+        )
 
-    _query = _client.query_api()
-
-    def __init__(self, reader: TelemetryReader) -> None:
-        self._reader = reader
+        self._query = self._client.query_api()
 
     def latest_state(self, asset_id: str) -> State:
         """
