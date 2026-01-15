@@ -13,7 +13,7 @@ from bvolt.infrastructure.container import (
 
 
 @lru_cache
-def get_battery_service(asset_id) -> list[BatteryService]:
+def get_battery_services(asset_id) -> list[BatteryService]:
     return build_battery_services(asset_id)
 
 

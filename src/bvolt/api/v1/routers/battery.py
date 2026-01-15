@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from bvolt.api.v1.dependencies import get_battery_service
+from bvolt.api.v1.dependencies import get_battery_services
 from bvolt.services.battery_service import BatteryService
 
 router = APIRouter(
@@ -27,7 +27,7 @@ def _resolve_battery_service(
 
 @router.get("")
 def list_batteries(
-        services: list[BatteryService] = Depends(get_battery_service),
+        services: list[BatteryService] = Depends(get_battery_services),
 ):
     return [
         {"battery_id": service.battery.asset_id}
@@ -38,7 +38,7 @@ def list_batteries(
 @router.get("/{battery_id}/latest")
 def latest_battery_state(
         battery_id: str,
-        services: list[BatteryService] = Depends(get_battery_service),
+        services: list[BatteryService] = Depends(get_battery_services),
 ):
     """
     Return the latest known state for a specific battery.
@@ -59,7 +59,7 @@ def battery_timeseries(
         battery_id: str,
         start: str,
         end: str,
-        services: list[BatteryService] = Depends(get_battery_service),
+        services: list[BatteryService] = Depends(get_battery_services),
 ):
     """
     Return the battery timeseries over a given time range.
