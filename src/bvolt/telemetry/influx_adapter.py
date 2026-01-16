@@ -7,7 +7,9 @@ from bvolt.telemetry.reader import TelemetryReader
 from bvolt.telemetry.writer import TelemetryWriter
 from bvolt.infrastructure.config import *
 
-from influxdb_client import InfluxDBClient
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+
 
 class InfluxTelemetryReader(TelemetryReader):
 
@@ -75,4 +77,46 @@ class InfluxTelemetryReader(TelemetryReader):
 
         raise NotImplementedError(
             "Timeseries State construction is pending domain implementation."
+        )
+
+
+class InfluxTelemetryWriter(TelemetryWriter):
+
+    def __init__(self) -> None:
+        self._client = InfluxDBClient(
+            url=config.influx_url,
+            token=config.influx_token,
+            org=config.influx_org,
+        )
+        self._write_api = self._client.write_api(write_options=SYNCHRONOUS)
+
+    def record_state(
+            self,
+            asset_id: str,
+            state: State,
+            timestamp: datetime,
+    ) -> None:
+        # Do NOT assume State structure yet.
+        # Only assume it can be represented as key/value pairs.
+
+        if not hasattr(state, "to_dict"):
+            raise NotImplementedError(
+                "State serialization not implemented yet"
+            )
+
+        fields = state.to_dict()
+
+        record = (
+            Point("asset_state")
+            .tag("asset_id", asset_id)
+            .time(timestamp)
+        )
+
+        for key, value in fields.items():
+            point = record.field(key, value)
+
+        self._write_api.write(
+            bucket=config.influx_bucket,
+            org=config.influx_org,
+            record=record,
         )

@@ -2,7 +2,7 @@ from bvolt.domain.battery.model import Battery
 from bvolt.services.telemetry_service import TelemetryService
 from bvolt.services.battery_service import BatteryService
 from bvolt.services.microgrid_service import MicrogridService
-from bvolt.telemetry.influx_adapter import InfluxTelemetryReader
+from bvolt.telemetry.influx_adapter import InfluxTelemetryReader, InfluxTelemetryWriter
 
 
 def build_telemetry_service() -> TelemetryService:
@@ -10,7 +10,8 @@ def build_telemetry_service() -> TelemetryService:
     Construct the TelemetryService with the appropriate reader/writer.
     """
     telemetry_reader = InfluxTelemetryReader()
-    return TelemetryService(telemetry_reader)
+    telemetry_writer = InfluxTelemetryWriter()
+    return TelemetryService(telemetry_reader, telemetry_writer)
 
 
 def build_battery_services(battery_id: str) -> list[BatteryService]:
