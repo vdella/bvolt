@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import Dict
 
+from bvolt.domain.state import State
+
 
 @dataclass(frozen=True)
-class BatteryState:
+class BatteryState(State):
     """
     Immutable snapshot of a battery state.
     """

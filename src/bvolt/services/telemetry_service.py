@@ -18,7 +18,7 @@ class TelemetryService:
     def __init__(
             self,
             reader: TelemetryReader,
-            writer: TelemetryWriter | None = None,
+            writer: TelemetryWriter,
     ) -> None:
         """
         Initialize the TelemetryService.
@@ -67,10 +67,4 @@ class TelemetryService:
         This operation is intended for trusted internal processes such
         as the polling runtime or EMS services.
         """
-        if self._writer is None:
-            raise RuntimeError(
-                "TelemetryService is configured as read-only; "
-                "no TelemetryWriter is available."
-            )
-
-        raise NotImplementedError
+        return self._writer.record_state(asset_id, state, timestamp)

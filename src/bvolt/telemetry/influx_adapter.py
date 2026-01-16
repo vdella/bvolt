@@ -113,7 +113,7 @@ class InfluxTelemetryWriter(TelemetryWriter):
         )
 
         for key, value in fields.items():
-            point = record.field(key, value)
+            record = record.field(key, value)
 
         self._write_api.write(
             bucket=config.influx_bucket,
