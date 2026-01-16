@@ -45,13 +45,8 @@ def latest_battery_state(
     """
     battery_service = _resolve_battery_service(battery_id, services)
 
-    try:
-        return battery_service.latest_state()
-    except NotImplementedError:
-        raise HTTPException(
-            status_code=501,
-            detail="Battery state not implemented yet",
-        )
+    state = battery_service.latest_state()
+    return state.to_dict()
 
 
 @router.get("/{battery_id}/timeseries")
@@ -66,12 +61,8 @@ def battery_timeseries(
     """
     battery_service = _resolve_battery_service(battery_id, services)
 
-    try:
-        start = datetime.fromisoformat(start)
-        end = datetime.fromisoformat(end)
-        return battery_service.timeseries(start=start, end=end)
-    except NotImplementedError:
-        raise HTTPException(
-            status_code=501,
-            detail="Battery timeseries not implemented yet",
-        )
+    start = datetime.fromisoformat(start)
+    end = datetime.fromisoformat(end)
+    series = battery_service.timeseries(start, end)
+
+    return [state.to_dict() for state in series]

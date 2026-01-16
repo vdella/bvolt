@@ -13,7 +13,14 @@ router = APIRouter(
 def system_snapshot(
         microgrid_service: MicrogridService = Depends(get_microgrid_service),
 ):
-    return microgrid_service.system_snapshot()
+    snapshot = microgrid_service.system_snapshot()
+
+    return {
+        "batteries": [
+            state.to_dict()
+            for state in snapshot
+        ]
+    }
 
 
 @router.get("/timeseries")
