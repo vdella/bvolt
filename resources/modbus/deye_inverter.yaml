@@ -1,0 +1,96 @@
+deye_inverter:
+  manufacturer: "Deye"
+  model: "SUN-series"
+  protocol: "modbus-rtu"
+
+  registers:
+
+    # -------------------------
+    # Grid voltages
+    # -------------------------
+    - name: grid_voltage_l1
+      address: 150
+      function: 3
+      datatype: uint16
+      scaling: 0.1
+      unit: V
+      domain_key: grid.voltage.l1
+
+    - name: grid_voltage_l2
+      address: 151
+      function: 3
+      datatype: uint16
+      scaling: 0.1
+      unit: V
+      domain_key: grid.voltage.l2
+
+    - name: grid_voltage_l3
+      address: 152
+      function: 3
+      datatype: uint16
+      scaling: 0.1
+      unit: V
+      domain_key: grid.voltage.l3
+
+    # -------------------------
+    # PV
+    # -------------------------
+    - name: pv1_power
+      address: 186
+      function: 3
+      datatype: uint16
+      scaling: 1.0
+      unit: W
+      domain_key: pv.sun.power
+
+    - name: pv2_power
+      address: 187
+      function: 3
+      datatype: uint16
+      scaling: 1.0
+      unit: W
+      domain_key: pv.emulator.power
+
+    # -------------------------
+    # Battery
+    # -------------------------
+    - name: battery_soc
+      address: 210
+      function: 3
+      datatype: uint16
+      scaling: 1.0
+      unit: "%"
+      domain_key: battery.soc
+
+    - name: battery_voltage
+      address: 211
+      function: 3
+      datatype: uint16
+      scaling: 0.01
+      unit: V
+      domain_key: battery.voltage
+
+    - name: battery_current
+      address: 212
+      function: 3
+      datatype: int16
+      scaling: 0.01
+      unit: A
+      domain_key: battery.current
+
+    - name: battery_power
+      address: 213
+      function: 3
+      datatype: int16
+      scaling: 1.0
+      unit: W
+      domain_key: battery.power
+
+    - name: battery_temperature
+      address: 214
+      function: 3
+      datatype: uint16
+      scaling: 0.1
+      unit: C
+      transform: "temp_offset_1000"
+      domain_key: battery.temperature
