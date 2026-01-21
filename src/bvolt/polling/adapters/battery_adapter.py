@@ -1,13 +1,14 @@
 import random
 
 
-class BatteryAdapter:
+class BatteryBankAdapter:
     """
     Temporary adapter for battery measurements.
     Replace with Modbus/Serial later.
     """
 
-    def read(self) -> dict:
+    @staticmethod
+    def read() -> dict:
         return {
             "soc": random.uniform(40.0, 80.0),
             "voltage": random.uniform(48.0, 54.0),
