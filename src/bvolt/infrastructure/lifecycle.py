@@ -1,4 +1,5 @@
 from bvolt.polling.adapters.battery_adapter import BatteryAdapter
+from bvolt.polling.adapters.inverter_adapter import InverterAdapter
 from bvolt.polling.runner import PollingRunner
 from bvolt.polling.jobs.battery_job import BatteryPollingJob
 from bvolt.infrastructure.container import build_telemetry_service
@@ -17,6 +18,12 @@ class ApplicationLifecycle:
                 battery_id="battery_id",  # TODO change so it comports multiple batteries.
                 telemetry=telemetry,
                 adapter=BatteryAdapter()
+            ),
+
+            InverterPollingJob(
+                inverter_id="inverter_id",  # TODO change so it comports multiple inverters.
+                telemetry=telemetry,
+                adapter=InverterAdapter()
             )
         ]
 

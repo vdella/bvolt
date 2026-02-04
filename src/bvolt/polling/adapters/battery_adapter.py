@@ -1,7 +1,7 @@
 import random
 
 
-class BatteryBankAdapter:
+class BatteryAdapter:
     """
     Temporary adapter for battery measurements.
     Replace with Modbus/Serial later.

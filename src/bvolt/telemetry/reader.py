@@ -27,3 +27,4 @@ class TelemetryReader(ABC):
         Return an ordered sequence of State snapshots for a given
         asset over a specified time range.
         """
+        raise NotImplementedError

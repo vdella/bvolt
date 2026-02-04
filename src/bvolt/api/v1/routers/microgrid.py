@@ -16,10 +16,10 @@ def system_snapshot(
     snapshot = microgrid_service.system_snapshot()
 
     return {
-        "batteries": [
+        "devices": [
             state.to_dict()
             for state in snapshot
-        ]
+        ],
     }
 
 
