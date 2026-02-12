@@ -14,8 +14,7 @@ class InverterState(State):
     grid_voltage_l2: float
     grid_voltage_l3: float
 
-    pv1_power: float
-    pv2_power: float
+    pv_power: float
 
     battery_soc: float
     battery_voltage: float
@@ -29,8 +28,7 @@ class InverterState(State):
             "grid_voltage_l2": self.grid_voltage_l2,
             "grid-voltage_l3": self.grid_voltage_l3,
 
-            "pv1_power": self.pv1_power,
-            "pv2_power": self.pv2_power,
+            "pv_power": self.pv_power,
 
             "battery_soc": self.battery_soc,
             "battery_voltage": self.battery_voltage,
