@@ -29,22 +29,19 @@ None of the project entities should include a timestamp.
 
 ## Entities
 
-* Battery
-  * Stores energy
-  * Can charge or discharge
-  * Has a State of Charge (SOC)
-  * Has temperature
-  * Has physical limits
+* Microgrid/EMS
+  Abstract entity. It is the logical aggregation of assets 
+operating under a shared electrical and control context.
 
-* Inverter
-  * Has 3 phases
-  * Has working modes for managing energy
-  * Convertes energy between DC and AC adapters
-  * Has operational limits
-
-* Microgrid
-  * Logical aggregation of assets operating under a shared electrical and control context.
-
-* PV
-  * Generates power from the sun
-  * Has physical limits
+* Inverters
+  * Have 3 phases
+  * Have working modes for managing energy
+  * Converts energy between DC and AC adapters
+  * Have operational limits
+* Batteries
+  * Voltage
+  * Current
+  * Power
+  * Temperature
+* Solar arrays
+  * PV powers generated from the sun

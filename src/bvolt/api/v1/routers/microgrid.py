@@ -1,42 +1,62 @@
-from fastapi import APIRouter, Depends
 from datetime import datetime
 
-from bvolt.api.v1.dependencies import get_microgrid_service
-from bvolt.services.microgrid_service import MicrogridService
+from fastapi import APIRouter, Depends, HTTPException
+
+from bvolt.api.v1.dependencies import get_inverter_services
+from bvolt.services.inverter_service import InverterService
 
 router = APIRouter(
     prefix="/microgrid",
     tags=["microgrid"],
 )
 
-@router.get("/snapshot")
-def system_snapshot(
-        microgrid_service: MicrogridService = Depends(get_microgrid_service),
+
+def _resolve_inverter_service(
+        inverter_id: str,
+        services: list[InverterService],
+) -> InverterService:
+    for service in services:
+        if service.inverter.asset_id == inverter_id:
+            return service
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Inverter '{inverter_id}' not found",
+    )
+
+
+@router.get("")
+def list_inverters(
+        services: list[InverterService] = Depends(get_inverter_services),
 ):
-    snapshot = microgrid_service.system_snapshot()
-
-    return {
-        "devices": [
-            state.to_dict()
-            for state in snapshot
-        ],
-    }
+    return [
+        {"inverter_id": service.inverter.asset_id}
+        for service in services
+    ]
 
 
-@router.get("/timeseries")
-def microgrid_timeseries(
+@router.get("/{inverter_id}/latest")
+def latest_inverter_state(
+        inverter_id: str,
+        services: list[InverterService] = Depends(get_inverter_services),
+):
+    inverter_service = _resolve_inverter_service(inverter_id, services)
+
+    state = inverter_service.latest_state()
+    return state.to_dict()
+
+
+@router.get("/{inverter_id}/timeseries")
+def inverter_timeseries(
+        inverter_id: str,
         start: str,
         end: str,
-        microgrid_service: MicrogridService = Depends(get_microgrid_service),
+        services: list[InverterService] = Depends(get_inverter_services),
 ):
+    inverter_service = _resolve_inverter_service(inverter_id, services)
+
     start = datetime.fromisoformat(start)
     end = datetime.fromisoformat(end)
-    return microgrid_service.timeseries(start=start, end=end)
+    series = inverter_service.timeseries(start, end)
 
-
-@router.get("/operating-mode")
-def operating_mode(
-        microgrid_service: MicrogridService = Depends(get_microgrid_service),
-):
-    mode = microgrid_service.operating_mode()
-    return {"operating_mode": mode}
+    return [state.to_dict() for state in series]

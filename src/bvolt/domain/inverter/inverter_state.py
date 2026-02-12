@@ -14,9 +14,27 @@ class InverterState(State):
     grid_voltage_l2: float
     grid_voltage_l3: float
 
+    pv1_power: float
+    pv2_power: float
+
+    battery_soc: float
+    battery_voltage: float
+    battery_current: float
+    battery_power: float
+    battery_temperature: float
+
     def to_dict(self) -> Dict[str, float]:
         return {
             "grid_voltage_l1": self.grid_voltage_l1,
             "grid_voltage_l2": self.grid_voltage_l2,
             "grid-voltage_l3": self.grid_voltage_l3,
+
+            "pv1_power": self.pv1_power,
+            "pv2_power": self.pv2_power,
+
+            "battery_soc": self.battery_soc,
+            "battery_voltage": self.battery_voltage,
+            "battery_current": self.battery_current,
+            "battery_power": self.battery_power,
+            "battery_temperature": self.battery_temperature,
         }
