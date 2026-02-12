@@ -3,7 +3,7 @@ import random
 
 class InverterAdapter:
     """
-    Temporary adapter for battery measurements.
+    Temporary adapter for inverter measurements.
     Replace with Modbus/Serial later.
     """
 
@@ -13,4 +13,12 @@ class InverterAdapter:
             "grid_voltage_l1": random.uniform(40.0, 80.0),
             "grid_voltage_l2": random.uniform(48.0, 54.0),
             "grid_voltage_l3": random.uniform(-20.0, 20.0),
+
+            "pv_power": random.uniform(40.0, 80.0),
+
+            "battery_soc": random.uniform(40.0, 80.0),
+            "battery_voltage": random.uniform(40.0, 80.0),
+            "battery_current": random.uniform(40.0, 80.0),
+            "battery_power": random.uniform(40.0, 80.0),
+            "battery_temperature": random.uniform(40.0, 80.0),
         }
