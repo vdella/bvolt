@@ -11,16 +11,16 @@ flowchart LR
 %% =====================
 %% Physical System
 %% =====================
-    BATTERY["5-Cell Lithium Battery Bank"]
-    BMS["BMS Sensors"]
+    INVERTERS["3-phase inverters"]
+    EMS["EMS"]
 
-    BATTERY --> BMS
+    INVERTERS --> EMS
 
 %% =====================
 %% Hardware-facing Layer
 %% =====================
     WORKER["Polling Worker (hardware-facing)"]
-    BMS -->|Modbus/Serial| WORKER
+    EMS -->|Modbus/Serial| WORKER
 
 %% =====================
 %% State Persistence
@@ -81,5 +81,4 @@ CLIENT <-->|HTTP| API
 %% =====================
 TWIN -.-> MHE
 TWIN -.-> TFT
-
 ```
