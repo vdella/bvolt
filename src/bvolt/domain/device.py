@@ -9,7 +9,7 @@ from bvolt.domain.state import State
 
 class Device(ABC):
 
-    equipment_type: str
+    label: str
     instrument: "Instrument"
 
     state: State
