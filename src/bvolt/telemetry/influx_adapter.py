@@ -5,7 +5,6 @@ from bvolt.domain.state import State
 from bvolt.infrastructure import config
 from bvolt.telemetry.reader import TelemetryReader
 from bvolt.telemetry.writer import TelemetryWriter
-from bvolt.infrastructure.config import *
 
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -42,7 +41,7 @@ class InfluxTelemetryReader(TelemetryReader):
         # TODO:
         # Translate FluxRecord(s) into a domain State instance.
         # This must be implemented once concrete State subclasses
-        # (e.g. BatteryState) are defined in the domain layer.
+        # (e.g. InverterState) are defined in the domain layer.
 
         raise NotImplementedError(
             "State construction is pending domain implementation."
