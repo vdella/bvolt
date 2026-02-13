@@ -2,61 +2,37 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from bvolt.domain.inverter.inverter_device import Inverter
 from bvolt.api.v1.dependencies import get_inverter_services
 from bvolt.services.inverter_service import InverterService
 
 router = APIRouter(
-    prefix="/microgrid",
-    tags=["microgrid"],
+    prefix="/inverter",
+    tags=["inverter"],
 )
 
-
-def _resolve_inverter_service(
-        inverter_id: str,
-        services: list[InverterService],
-) -> InverterService:
-    for service in services:
-        if service.inverter.asset_id == inverter_id:
-            return service
-
-    raise HTTPException(
-        status_code=404,
-        detail=f"Inverter '{inverter_id}' not found",
-    )
-
+services = get_inverter_services()
 
 @router.get("")
-def list_inverters(
-        services: list[InverterService] = Depends(get_inverter_services),
-):
-    return [
-        {"inverter_id": service.inverter.asset_id}
-        for service in services
-    ]
+def latest_state():
+    return {
+        "inverter_1": services["inverter_1"].latest_state(),
+        "inverter_2": services["inverter_2"].latest_state(),
+    }
 
 
-@router.get("/{inverter_id}/latest")
-def latest_inverter_state(
-        inverter_id: str,
-        services: list[InverterService] = Depends(get_inverter_services),
-):
-    inverter_service = _resolve_inverter_service(inverter_id, services)
-
-    state = inverter_service.latest_state()
-    return state.to_dict()
-
-
-@router.get("/{inverter_id}/timeseries")
-def inverter_timeseries(
-        inverter_id: str,
+@router.get("/timeseries")
+def timeseries(
         start: str,
-        end: str,
-        services: list[InverterService] = Depends(get_inverter_services),
+        end: str
 ):
-    inverter_service = _resolve_inverter_service(inverter_id, services)
-
     start = datetime.fromisoformat(start)
     end = datetime.fromisoformat(end)
-    series = inverter_service.timeseries(start, end)
 
-    return [state.to_dict() for state in series]
+    inverter_1_series = services["inverter_1"].timeseries(start, end)
+    inverter_2_series = services["inverter_2"].timeseries(start, end)
+
+    return {
+        "inverter_1": [state.to_dict() for state in inverter_1_series],
+        "inverter_2": [state.to_dict() for state in inverter_2_series],
+    }

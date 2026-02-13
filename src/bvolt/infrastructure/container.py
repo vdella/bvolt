@@ -1,8 +1,9 @@
-from bvolt.domain.battery.model import Battery
+from typing import Dict
+
+from bvolt.services.inverter_service import InverterService
 from bvolt.services.telemetry_service import TelemetryService
-from bvolt.services.battery_service import BatteryService
-from bvolt.services.microgrid_service import MicrogridService
 from bvolt.telemetry.influx_adapter import InfluxTelemetryReader, InfluxTelemetryWriter
+from bvolt.domain.inverter.inverter_device import Inverter
 
 
 def build_telemetry_service() -> TelemetryService:
@@ -14,24 +15,23 @@ def build_telemetry_service() -> TelemetryService:
     return TelemetryService(telemetry_reader, telemetry_writer)
 
 
-def build_battery_services(battery_id: str) -> list[BatteryService]:
-    # TODO: load battery definitions from config
-    battery = Battery(asset_id=battery_id)
+def build_inverter_services() -> Dict[str, InverterService]:
+    inverter_1 = Inverter(1)
+    inverter_2 = Inverter(2)
+
     telemetry = build_telemetry_service()
 
-    return [
-        BatteryService(
-            battery=battery,
-            telemetry=telemetry,
-        )
-    ]
-
-
-def build_microgrid_service(asset_id) -> MicrogridService:
-    batteries = build_battery_services(asset_id)
-    telemetry = build_telemetry_service()
-
-    return MicrogridService(
-        batteries=batteries,
+    inverter_1_service = InverterService(
+        inverter=inverter_1,
         telemetry=telemetry,
     )
+
+    inverter_2_service = InverterService(
+        inverter=inverter_2,
+        telemetry=telemetry
+    )
+
+    return {
+        'inverter_1': inverter_1_service,
+        'inverter_2': inverter_2_service,
+    }

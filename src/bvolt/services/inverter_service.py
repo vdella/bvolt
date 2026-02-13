@@ -2,7 +2,7 @@ from typing import Iterable
 from datetime import datetime
 
 from bvolt.domain.state import State
-from bvolt.domain.inverter import Inverter
+from bvolt.domain.inverter.inverter_device import Inverter
 from bvolt.services.telemetry_service import TelemetryService
 
 class InverterService:
@@ -22,22 +22,21 @@ class InverterService:
         Parameters
         ----------
         inverter:
-            Inverter asset object, carrying model, states and
-            constraints.
+            Inverter asset object.
         telemetry:
             TelemetryService for reading and writing inverter-related data.
         """
         self.inverter = inverter
         self._telemetry = telemetry
 
-    def latest_state(self) -> State:
+    def latest_state(self):
         """
         Retrieve the most recent recorded state for an inverter asset.
 
         This method does not guarantee real-time data. It returns the
         last known telemetry snapshot.
         """
-        raise NotImplementedError
+        return self.inverter.state
 
     def timeseries(
             self,

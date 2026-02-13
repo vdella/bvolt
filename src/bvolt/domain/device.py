@@ -12,7 +12,7 @@ class Device(ABC):
     label: str
     instrument: "Instrument"
 
-    state: State
+    state: dict
 
     @abstractmethod
     def read_register(self, register, decimals, function, signed):
